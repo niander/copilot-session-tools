@@ -27,6 +27,11 @@ def runner():
 class TestResolveContentSet:
     """Unit tests for resolve_content_set()."""
 
+    def test_system_messages_token_registered(self):
+        """system-messages is a valid export content token."""
+        assert "system-messages" in CONTENT_TYPES
+        assert "system-messages" not in DEFAULT_INCLUDES
+
     def test_resolve_default(self):
         """Default content_set matches DEFAULT_INCLUDES."""
         result = resolve_content_set()
@@ -121,11 +126,12 @@ class TestResolveSearchContentSet:
     """Unit tests for resolve_search_content_set()."""
 
     def test_default_returns_all_tokens(self):
-        """No args → all 8 search tokens."""
+        """No args → all search tokens."""
         result = resolve_search_content_set()
         assert result == SEARCH_DEFAULT_INCLUDES
-        assert len(result) == 8
+        assert len(result) == 9
         assert "messages" in result
+        assert "system-messages" in result
 
     def test_include_is_exclusive(self):
         """--include replaces defaults (exclusive semantics)."""
@@ -143,10 +149,10 @@ class TestResolveSearchContentSet:
         assert result == {"tool-inputs", "tools"}
 
     def test_exclude_messages(self):
-        """--exclude messages → 7 tokens remaining."""
+        """--exclude messages removes only messages token."""
         result = resolve_search_content_set(exclude=["messages"])
         assert "messages" not in result
-        assert len(result) == 7
+        assert len(result) == 8
 
     def test_exclude_everything_raises(self):
         """Excluding all tokens raises BadParameter."""
@@ -172,7 +178,7 @@ class TestResolveSearchContentSet:
         result = resolve_search_content_set(exclude=["messages,thinking"])
         assert "messages" not in result
         assert "thinking" not in result
-        assert len(result) == 6
+        assert len(result) == 7
 
     def test_unknown_token_warned(self, capsys):
         """Unknown tokens produce a warning and are ignored."""

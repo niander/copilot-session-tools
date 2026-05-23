@@ -14,6 +14,7 @@ import typer
 
 CONTENT_TYPES: dict[str, str] = {
     "thinking": "Include thinking/reasoning blocks",
+    "system-messages": "Expand system-role messages by default",
     "diffs": "Include file change diffs",
     "tool-inputs": "Include tool input parameters",
     "agent-details": "Include full agent/subagent content",
@@ -30,6 +31,7 @@ DEFAULT_INCLUDES: set[str] = {"agent-details", "tools", "commands", "file-change
 
 SEARCH_CONTENT_TYPES: dict[str, str] = {
     "messages": "Search message content",
+    "system-messages": "Search system-role message content",
     "thinking": "Search thinking/reasoning blocks",
     "diffs": "Search file change diffs",
     "tool-inputs": "Search tool input parameters",

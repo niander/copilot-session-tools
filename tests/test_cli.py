@@ -432,7 +432,7 @@ class TestSearchIncludeExclude:
 
     def test_search_exclude_everything_errors(self, runner, temp_db_with_data):
         """Excluding all content types raises an error (empty set)."""
-        all_types = "messages,thinking,diffs,tool-inputs,agent-details,tools,commands,file-changes"
+        all_types = "messages,system-messages,thinking,diffs,tool-inputs,agent-details,tools,commands,file-changes"
         result = runner.invoke(
             app,
             ["search", "--db", str(temp_db_with_data), "Hello", "--exclude", all_types],
