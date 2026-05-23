@@ -2240,7 +2240,6 @@ input:checked + .toggle-switch::after {
         // Settings panel state
         settingsOpen: false,
         thinking: false,
-        systemMessages: false,
         diffs: true,
         toolInputs: true,
         agentDetails: true,
@@ -2277,8 +2276,6 @@ input:checked + .toggle-switch::after {
         get hideClasses() {
           const classes = [];
           if (!this.thinking) classes.push('hide-thinking');
-          if (!this.systemMessages) classes.push('hide-system-messages');
-          if (this.systemMessages) classes.push('expand-system-messages');
           if (!this.diffs) classes.push('hide-diffs');
           if (!this.toolInputs) classes.push('hide-tool-inputs');
           if (!this.agentDetails) classes.push('hide-agent-details');
@@ -2302,14 +2299,6 @@ input:checked + .toggle-switch::after {
           this.$watch('thinking', () => {
             const anchor = this.getAnchorState();
             this.$nextTick(() => { this.restoreScroll(anchor); this.saveSettings(); });
-          });
-          this.$watch('systemMessages', () => {
-            const anchor = this.getAnchorState();
-            this.$nextTick(() => {
-              this.applySystemMessageDefaults();
-              this.restoreScroll(anchor);
-              this.saveSettings();
-            });
           });
           this.$watch('diffs', () => {
             const anchor = this.getAnchorState();
@@ -2357,9 +2346,6 @@ input:checked + .toggle-switch::after {
               }
             });
           });
-
-          this.initializeSystemMessageDetails();
-          this.applySystemMessageDefaults();
 
           // Auto-collapse long code blocks
           this.autoCollapseCodeBlocks();
@@ -2544,35 +2530,17 @@ input:checked + .toggle-switch::after {
         saveSettings() {
           try {
             localStorage.setItem('cst-settings', JSON.stringify({
-              thinking: this.thinking, systemMessages: this.systemMessages, diffs: this.diffs, toolInputs: this.toolInputs,
+              thinking: this.thinking, diffs: this.diffs, toolInputs: this.toolInputs,
               agentDetails: this.agentDetails, tools: this.tools, commands: this.commands,
               fileChanges: this.fileChanges, syntaxHighlight: this.syntaxHighlight
             }));
           } catch(e) {}
         },
 
-        initializeSystemMessageDetails() {
-          document.querySelectorAll('.system-message-details').forEach(details => {
-            details.addEventListener('toggle', function() {
-              if (this.dataset.applyingDefaults === 'true') return;
-              this.dataset.userToggled = 'true';
-            });
-          });
-        },
-
-        applySystemMessageDefaults() {
-          document.querySelectorAll('.system-message-details').forEach(details => {
-            if (details.dataset.userToggled === 'true') return;
-            details.dataset.applyingDefaults = 'true';
-            details.open = this.systemMessages;
-            details.dataset.applyingDefaults = 'false';
-          });
-        },
-
         buildContentSet() {
           const set = [];
           if (this.thinking) set.push('thinking');
-          if (this.systemMessages) set.push('system-messages');
+          set.push('system-messages');
           if (this.diffs) set.push('diffs');
           if (this.toolInputs) set.push('tool-inputs');
           if (this.agentDetails) set.push('agent-details');
@@ -2795,11 +2763,6 @@ input:checked + .toggle-switch::after {
                     <input type="checkbox" x-model="thinking">
                     <span class="toggle-switch"></span>
                     <span>Thinking blocks</span>
-                  </label>
-                  <label class="settings-toggle">
-                    <input type="checkbox" x-model="systemMessages">
-                    <span class="toggle-switch"></span>
-                    <span>System messages</span>
                   </label>
                   <label class="settings-toggle">
                     <input type="checkbox" x-model="toolInputs">
