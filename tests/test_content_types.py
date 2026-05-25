@@ -129,9 +129,8 @@ class TestResolveSearchContentSet:
         """No args → all search tokens."""
         result = resolve_search_content_set()
         assert result == SEARCH_DEFAULT_INCLUDES
-        assert len(result) == 9
+        assert len(result) == 8
         assert "messages" in result
-        assert "system-messages" in result
 
     def test_include_is_exclusive(self):
         """--include replaces defaults (exclusive semantics)."""
@@ -152,7 +151,7 @@ class TestResolveSearchContentSet:
         """--exclude messages removes only messages token."""
         result = resolve_search_content_set(exclude=["messages"])
         assert "messages" not in result
-        assert len(result) == 8
+        assert len(result) == 7
 
     def test_exclude_everything_raises(self):
         """Excluding all tokens raises BadParameter."""
@@ -178,7 +177,7 @@ class TestResolveSearchContentSet:
         result = resolve_search_content_set(exclude=["messages,thinking"])
         assert "messages" not in result
         assert "thinking" not in result
-        assert len(result) == 7
+        assert len(result) == 6
 
     def test_unknown_token_warned(self, capsys):
         """Unknown tokens produce a warning and are ignored."""

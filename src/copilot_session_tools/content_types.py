@@ -31,7 +31,6 @@ DEFAULT_INCLUDES: set[str] = {"agent-details", "tools", "commands", "file-change
 
 SEARCH_CONTENT_TYPES: dict[str, str] = {
     "messages": "Search message content",
-    "system-messages": "Search system-role message content",
     "thinking": "Search thinking/reasoning blocks",
     "diffs": "Search file change diffs",
     "tool-inputs": "Search tool input parameters",
