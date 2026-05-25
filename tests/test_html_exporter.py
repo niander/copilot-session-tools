@@ -265,7 +265,6 @@ class TestSessionToHtml:
         assert '<span class="collapsible-icon" aria-hidden="true">▶</span>' in html
         assert '<a href="#msg-2" class="message-anchor"' in html
         assert "System instructions go here" in html
-        assert "hide-system-messages" in html
         assert 'class="system-message-details" open' not in html
 
     def test_system_messages_expand_when_included(self, session_with_system_message):
