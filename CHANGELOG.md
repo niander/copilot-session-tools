@@ -7,11 +7,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.17.0] - 2026-06-23
+## [0.18.0] - 2026-08-06
 
 ### Changed
 
 - **Scanner / Web Viewer**: External (host-app) tools (`external_tool.requested` / `external_tool.completed`) now render as collapsible tool blocks that expose their parameters, instead of a one-line status breadcrumb. Because the host application runs these tools and never returns a result into the session, the block shows an explicit "Response: Not recorded" note, and an `external tool` badge distinguishes them from CLI tools. Affects the web viewer and HTML export.
+
+## [0.17.1] - 2026-06-30
+
+### Fixed
+
+- **Scanner / Database**: CLI enrichment no longer re-writes already-current sessions on every scan. Staleness is now detected by storing each session's Chronicle turn count (`cst_sessions.builtin_turns`) and comparing it like-for-like, instead of comparing Chronicle turns against the enriched user-message count (an incompatible quantity that never matched, so hundreds of sessions were re-enriched on every scan and the scan never converged).
+- **Database**: Deleting a session's full-text-search rows now targets `cst_messages_fts` by `rowid` via the indexed message lookup rather than the `UNINDEXED` `session_id` column, which forced a full scan of every FTS document. On a large database this cuts per-session FTS deletion from ~1 s to ~1.5 ms, making each enrichment write roughly an order of magnitude faster.
+
+### Changed
+
+- **Database**: Schema migrated to v12, adding the nullable `cst_sessions.builtin_turns` column. The first scan after upgrading performs a one-time backfill of existing CLI sessions; subsequent incremental scans skip unchanged sessions.
+
+## [0.17.0] - 2026-06-29
+
+### Added
+
+- **CLI File Changes**: CLI `edit`/`create` tool calls now render as per-message file-change diffs, matching the VS Code view across the web viewer, Markdown export, and HTML export.
+- **Per-turn consolidation**: Multiple edits to the same file within a turn collapse into one card — a true net diff when the file is created in-turn, or reconstructed from a prior full-file `view` (including subagent views), with a stacked-hunks fallback when no base is available.
 
 ## [0.16.0] - 2026-06-06
 
