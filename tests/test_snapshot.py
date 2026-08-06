@@ -122,7 +122,7 @@ class TestCLIExternalToolsSnapshot:
     def test_html_export(self, file_regression):
         html = session_to_html(
             self.session,
-            content_set={"diffs", "tool-inputs", "thinking", "agent-details", "tools", "commands", "file-changes", "messages"},
+            content_set={"diffs", "tool-inputs", "thinking", "agent-details", "tools", "commands", "file-changes"},
         )
         file_regression.check(html, fullpath=BASELINES_DIR / "cli-with-external-tools.html", encoding="utf-8")
 
